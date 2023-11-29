@@ -98,7 +98,7 @@ def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = 
             score = _minmax(**params)
             undo_action(board_state, action)
             
-        print(f"Action: {action}, score: {score}")
+        # print(f"Action: {action}, score: {score}")
         
         if is_max_plr and (best_score is None or score > best_score):
             best_action = action
@@ -106,7 +106,7 @@ def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = 
         elif not is_max_plr and (best_score is None or score < best_score):
             best_action = action
             best_score = score
-
+    print(f"Best action: {best_action}, score: {best_score}")
     return best_action
         
     

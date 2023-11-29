@@ -11,6 +11,7 @@ def get_avaliable_actions(board: Board, is_black: bool) -> List[Action]:
         for j in range(faceup_state.shape[1]):
             if faceup_state[i][j] == 0:
                 result.append((MoveType.UNCOVER,i+1,j+1,-1,-1))
+                continue
             elif faceup_state[i][j] == -9:
                 continue
             elif is_black and faceup_state[i][j] < 0:
@@ -78,7 +79,8 @@ def undo_action(board: Board, action: Action) -> None:
         faceup_state[myPawn_x][myPawn_y],faceup_state[dest_x][dest_y] = \
         faceup_state[dest_x][dest_y],board.recent_dead[-1]
 
-        del board.recent_dead[-1]
+        # del board.recent_dead[-1]
+        board.recent_dead.pop(-1)
         # myPawn_x = action[1]
         # myPawn_y = action[2]
         # myPawn = faceup_state[myPawn_x][myPawn_y]
