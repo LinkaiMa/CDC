@@ -1,8 +1,64 @@
 from copy import deepcopy
 from Chinese_Dark_Chess import Board
 from ObjTypes import Action, State, MoveType
-from helpers import get_avaliable_actions
+from helpers import apply_action, get_avaliable_actions, undo_action
 from heuristics import placeholder_heuristic
+
+def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
+    if depth == 0 or len(get_avaliable_actions(board)) == 0 or board.check_status() != None:
+        return utility_fn(board)
+    
+    if is_max_plr:
+        max_eval = float('-inf')
+        for action in get_avaliable_actions(board):
+            eval = None
+            if action[0] == MoveType.UNCOVER:
+                # No searching if we immediately uncover a pawn
+                eval = utility_fn(board)
+            else:
+                params = {
+                    "board": board,
+                    "is_max_plr": False,
+                    "depth": depth-1 if depth > 0 else depth,
+                    "alpha": alpha,
+                    "beta": beta,
+                    "utility_fn": utility_fn,
+                }
+                apply_action(board, action)
+                eval = _minmax(**params)
+                undo_action(board, action)
+                
+                max_eval = max(max_eval, eval)
+                alpha = max(alpha, eval)
+                if beta <= alpha:
+                    break
+        return max_eval
+    
+    else:
+        min_eval = float('inf')
+        for action in get_avaliable_actions(board):
+            eval = None
+            if action[0] == MoveType.UNCOVER:
+                # No searching if we immediately uncover a pawn
+                eval = utility_fn(board)
+            else:
+                params = {
+                    "board": board,
+                    "is_max_plr": True,
+                    "depth": depth-1 if depth > 0 else depth,
+                    "alpha": alpha,
+                    "beta": beta,
+                    "utility_fn": utility_fn,
+                }
+                apply_action(board, action)
+                eval = _minmax(**params)
+                undo_action(board, action)
+                
+                min_eval = min(min_eval, eval)
+                beta = min(beta, eval)
+                if beta <= alpha:
+                    break
+        return min_eval
 
 def find_best_move_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = placeholder_heuristic) -> Action:
     """Find the best move for the given piece on the given board using alpha-beta pruning.
@@ -16,20 +72,41 @@ def find_best_move_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = pl
     Returns:
         Action: Next action suggested by the algorithm.
     """
-    board_state = deepcopy(currBoard.faceup)
+    board_state = deepcopy(currBoard)
+    alpha = float("-inf")
+    beta = float("inf")
+    is_max_plr = True if currPlayer == "black" else False
+    
     params = {
-        "faceup_state": board_state,
-        "board": currBoard,
-        "currPlayer": currPlayer,
+        "board": board_state,
+        "is_max_plr": is_max_plr,
         "depth": depth,
+        "alpha": alpha,
+        "beta": beta,
         "utility_fn": utility_fn,
     }
     
-    best_move = None
+    best_action = None
     best_score = float("-inf")
-    alpha = float("-inf")
-    beta = float("inf")
-    
-    for action in get_avaliable_actions(currBoard):
-        pass
+    for action in get_avaliable_actions(board_state):
+        score = None
+        if action[0] == MoveType.UNCOVER:
+            # No searching if we immediately uncover a pawn
+            score = utility_fn(board_state)
+        else:
+            apply_action(board_state, action)
+            score = _minmax(**params)
+            undo_action(board_state, action)
+            
+        print(f"Action: {action}, score: {score}")
+        
+        if is_max_plr and score > best_score:
+            best_action = action
+            best_score = score
+        elif not is_max_plr and score < best_score:
+            best_action = action
+            best_score = score
+
+    return best_action
+        
     
