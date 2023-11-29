@@ -1,16 +1,16 @@
 from copy import deepcopy
-from Chinese_Dark_Chess import Board
-from ObjTypes import Action, State, MoveType
+from ChessBoard import Board
+from ObjTypes import Action, MoveType
 from helpers import apply_action, get_avaliable_actions, undo_action
 from heuristics import placeholder_heuristic
 
 def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
-    if depth == 0 or len(get_avaliable_actions(board)) == 0 or board.check_status() != None:
+    if depth == 0 or len(get_avaliable_actions(board, is_max_plr)) == 0 or board.check_status() != None:
         return utility_fn(board)
     
     if is_max_plr:
         max_eval = float('-inf')
-        for action in get_avaliable_actions(board):
+        for action in get_avaliable_actions(board, is_max_plr):
             eval = None
             if action[0] == MoveType.UNCOVER:
                 # No searching if we immediately uncover a pawn
@@ -36,7 +36,7 @@ def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
     
     else:
         min_eval = float('inf')
-        for action in get_avaliable_actions(board):
+        for action in get_avaliable_actions(board, is_max_plr):
             eval = None
             if action[0] == MoveType.UNCOVER:
                 # No searching if we immediately uncover a pawn
@@ -60,7 +60,7 @@ def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
                     break
         return min_eval
 
-def find_best_move_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = placeholder_heuristic) -> Action:
+def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = placeholder_heuristic) -> Action:
     """Find the best move for the given piece on the given board using alpha-beta pruning.
 
     Args:
@@ -75,7 +75,7 @@ def find_best_move_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = pl
     board_state = deepcopy(currBoard)
     alpha = float("-inf")
     beta = float("inf")
-    is_max_plr = True if currPlayer == "black" else False
+    is_max_plr = True if currPlayer == -1 else False
     
     params = {
         "board": board_state,
@@ -87,8 +87,8 @@ def find_best_move_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = pl
     }
     
     best_action = None
-    best_score = float("-inf")
-    for action in get_avaliable_actions(board_state):
+    best_score = None
+    for action in get_avaliable_actions(board_state, is_max_plr):
         score = None
         if action[0] == MoveType.UNCOVER:
             # No searching if we immediately uncover a pawn
@@ -100,10 +100,10 @@ def find_best_move_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = pl
             
         print(f"Action: {action}, score: {score}")
         
-        if is_max_plr and score > best_score:
+        if is_max_plr and (best_score is None or score > best_score):
             best_action = action
             best_score = score
-        elif not is_max_plr and score < best_score:
+        elif not is_max_plr and (best_score is None or score < best_score):
             best_action = action
             best_score = score
 

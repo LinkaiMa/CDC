@@ -1,11 +1,57 @@
 
 from typing import List
-from Chinese_Dark_Chess import Board
+from unittest import result
+from ChessBoard import Board
 from ObjTypes import Action, MoveType
-
-
-def get_avaliable_actions(board: Board) -> List[Action]:
-    return []
+    
+def get_avaliable_actions(board: Board, is_black: bool) -> List[Action]:
+    faceup_state = board.faceup
+    result = []
+    for i in range(faceup_state.shape[0]):
+        for j in range(faceup_state.shape[1]):
+            if faceup_state[i][j] == 0:
+                result.append((MoveType.UNCOVER,i+1,j+1,-1,-1))
+            elif faceup_state[i][j] == -9:
+                continue
+            elif is_black and faceup_state[i][j] < 0:
+                # eat
+                if i-1 >= 0 and faceup_state[i-1][j] > 0 and board.is_eat_legal((i+1,j+1),(i,j+1)):
+                    result.append((MoveType.EAT,i+1,j+1,i,j+1))
+                elif i+1 < faceup_state.shape[0] and faceup_state[i+1][j] > 0 and board.is_eat_legal((i+1,j+1),(i+2,j+1)):
+                    result.append((MoveType.EAT,i+1,j+1,i+2,j+1))
+                elif j-1 >= 0 and faceup_state[i][j-1] > 0 and board.is_eat_legal((i+1,j+1),(i+1,j)):
+                    result.append((MoveType.EAT,i+1,j+1,i+1,j))
+                elif j+1 < faceup_state.shape[1] and faceup_state[i][j+1] > 0 and board.is_eat_legal((i+1,j+1),(i+1,j+2)):
+                    result.append((MoveType.EAT,i+1,j+1,i+1,j+2))
+                # move
+                if i-1 >= 0 and faceup_state[i-1][j] > 0 and board.is_move_legal((i+1,j+1),(i,j+1)):
+                    result.append((MoveType.MOVE,i+1,j+1,i,j+1))
+                elif i+1 < faceup_state.shape[0] and faceup_state[i+1][j] > 0 and board.is_move_legal((i+1,j+1),(i+2,j+1)):
+                    result.append((MoveType.MOVE,i+1,j+1,i+2,j+1))
+                elif j-1 >= 0 and faceup_state[i][j-1] > 0 and board.is_move_legal((i+1,j+1),(i+1,j)):
+                    result.append((MoveType.MOVE,i+1,j+1,i+1,j))
+                elif j+1 < faceup_state.shape[1] and faceup_state[i][j+1] > 0 and board.is_move_legal((i+1,j+1),(i+1,j+2)):
+                    result.append((MoveType.MOVE,i+1,j+1,i+1,j+2))
+            elif not is_black and faceup_state[i][j] > 0:
+                # eat
+                if i-1 >= 0 and faceup_state[i-1][j] < 0 and board.is_eat_legal((i+1,j+1),(i,j+1)):
+                    result.append((MoveType.EAT,i+1,j+1,i,j+1))
+                elif i+1 < faceup_state.shape[0] and faceup_state[i+1][j]< 0 and board.is_eat_legal((i+1,j+1),(i+2,j+1)):
+                    result.append((MoveType.EAT,i+1,j+1,i+2,j+1))
+                elif j-1 >= 0 and faceup_state[i][j-1] < 0 and board.is_eat_legal((i+1,j+1),(i+1,j)):
+                    result.append((MoveType.EAT,i+1,j+1,i+1,j))
+                elif j+1 < faceup_state.shape[1] and faceup_state[i][j+1] < 0 and board.is_eat_legal((i+1,j+1),(i+1,j+2)):
+                    result.append((MoveType.EAT,i+1,j+1,i+1,j+2))
+                # move
+                if i-1 >= 0 and faceup_state[i-1][j] < 0 and board.is_move_legal((i+1,j+1),(i,j+1)):
+                    result.append((MoveType.MOVE,i+1,j+1,i,j+1))
+                elif i+1 < faceup_state.shape[0] and faceup_state[i+1][j] < 0 and board.is_move_legal((i+1,j+1),(i+2,j+1)):
+                    result.append((MoveType.MOVE,i+1,j+1,i+2,j+1))
+                elif j-1 >= 0 and faceup_state[i][j-1] < 0 and board.is_move_legal((i+1,j+1),(i+1,j)):
+                    result.append((MoveType.MOVE,i+1,j+1,i+1,j))
+                elif j+1 < faceup_state.shape[1] and faceup_state[i][j+1] < 0 and board.is_move_legal((i+1,j+1),(i+1,j+2)):
+                    result.append((MoveType.MOVE,i+1,j+1,i+1,j+2))
+    return result
 
 def apply_action(board: Board, action: Action) -> None:
     faceup_state = board.faceup
@@ -54,5 +100,13 @@ def undo_action(board: Board, action: Action) -> None:
         faceup_state[dest_x][dest_y],faceup_state[myPawn_x][myPawn_y]
 
     
+    else:
+        raise ValueError(f"Invalid action type: {action[0]}.")
+    
+def action2cmd(action: Action) -> str:
+    if action[0] == MoveType.UNCOVER:
+        return f"u{action[1]}{action[2]}"
+    elif action[0] == MoveType.MOVE or action[0] == MoveType.EAT:
+        return f"m{action[1]}{action[2]}{action[3]}{action[4]}"
     else:
         raise ValueError(f"Invalid action type: {action[0]}.")

@@ -1,12 +1,11 @@
 import numpy as np
 import random
+
 name_list = ['General','Chariot','Horse','Cannon','Advisor','Elephant','Soldier']
 name_dic = {}
 for i,z in zip(np.arange(7,0,-1), name_list):
     name_dic[i] = 'Red '+z
     name_dic[-i] = 'Black '+z
-
-
 
 
 class Board:
@@ -130,74 +129,6 @@ class Board:
             print('Tie!')
             return 0
         return None
-    
-class Player:
-    def __init__(self):
-        self.role = 0
-    def action(self,act_str,B):
-        if act_str[0]=='u': # choose to uncover
-            if len(act_str) == 3: pass
-            else:
-                print('Wrong input!')
-                return False
-            if int(act_str[1])<=4 and int(act_str[2])<=8:
-                return B.uncover((int(act_str[1]),int(act_str[2])))
-            else:
-                print('Out of boundary!')
-                return False
-        elif act_str[0]=='m': # choose to move
-            if len(act_str) == 5: pass
-            else:
-                print('Wrong input!')
-                return False
-            if self.role*B.faceup[int(act_str[1])-1,int(act_str[2])-1]>=0: # chose the correct color
-                return B.move((int(act_str[1]),int(act_str[2])), (int(act_str[3]),int(act_str[4])))
-            else:
-                print('You selected the opponents piece!')
-                return False
-    def think(self,B):
-        act_str = input("How should I move?")
-        return act_str
-        
-# start game:
-        
-CDC_Board = Board()
-CDC_Board.print_board()
-P1 = Player(); P2 = Player()
-it = 0
-
-# we let Player1 make the first move
-act_str = P1.think(CDC_Board)
-# we assume the first move is uncover
-first_piece = P1.action(act_str, CDC_Board)
-if first_piece>0:
-    P1.role = 1; P2.role = -1 
-else:
-    P1.role = -1; P2.role = 1 
-    
-while CDC_Board.check_status() == None:
-    if it%2==0: # P2's turn
-        print('P2 turn')
-        it+=1
-        while True:
-            current = 'Red' if P2.role>0 else 'Black'
-            print(current+"s turn")
-            act_str = P2.think(CDC_Board)
-            res = P2.action(act_str,CDC_Board)
-            if res != False:
-                break
-        continue
-    else: # P1's turn
-        print('P1 turn')
-        it+=1
-        while True:
-            current = 'Red' if P1.role>0 else 'Black'
-            print(current+"s turn")
-            act_str = P1.think(CDC_Board)
-            res = P1.action(act_str,CDC_Board)
-            if res != False:
-                break
-        continue
     
     
     
