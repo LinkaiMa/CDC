@@ -45,14 +45,18 @@ class Board:
     def uncover(self,pos):
         # takes the position to uncover (starting from 1)
         i,j = pos[0]-1, pos[1]-1
-        if self.facedown[i,j]==0:
-            print('Error: the piece is already uncovered.')
-            return False
+        if i<4 and i>=0 and j<8 and j>=0:
+            if self.facedown[i,j]==0:
+                print('Error: the piece is already uncovered.')
+                return False
+            else:
+                self.faceup[i,j],self.facedown[i,j] = self.facedown[i,j],0
+                self.timer = 0
+                self.print_board()
+                return self.faceup[i,j]
         else:
-            self.faceup[i,j],self.facedown[i,j] = self.facedown[i,j],0
-            self.timer = 0
-            self.print_board()
-            return self.faceup[i,j]
+            print('Error: Out of the boundary')
+            return False
     def is_move_legal(self,sel,tar):
         good_pos = [(sel[0]+1,sel[1]),(sel[0],sel[1]+1),
                     (sel[0]-1,sel[1]),(sel[0],sel[1]-1)]
@@ -66,6 +70,10 @@ class Board:
         tarup,tardown = self.faceup[tar[0]-1,tar[1]-1], self.facedown[tar[0]-1,tar[1]-1]
         if tarup == -9: # target position is empty
             return True
+        
+        elif abs(selup)==1 and abs(tarup)==7:
+            return True
+        
         elif abs(selup)>=abs(tarup): # rank of selected piece is higher than target
             return True
         else:
