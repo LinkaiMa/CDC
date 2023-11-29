@@ -32,6 +32,7 @@ def undo_action(board: Board, action: Action) -> None:
         faceup_state[myPawn_x][myPawn_y],faceup_state[dest_x][dest_y] = \
         faceup_state[dest_x][dest_y],board.recent_dead[-1]
 
+        del board.recent_dead[-1]
         # myPawn_x = action[1]
         # myPawn_y = action[2]
         # myPawn = faceup_state[myPawn_x][myPawn_y]
