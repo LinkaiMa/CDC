@@ -25,7 +25,7 @@ class Board:
         
         self.facedown = all_chess.reshape((4,8))
         self.timer = 0
-
+        self.recent_dead = []
     def print_board(self):
         n,m = self.faceup.shape
         for row in range(n):
@@ -114,6 +114,7 @@ class Board:
                 else: # a black piece is captured
                     self.blackpieces.remove(tarup)
                 self.print_board()
+                self.recent_dead.append(tarup)
                 return True
             else:
                 print('You can not capture a piece of higher rank!')
