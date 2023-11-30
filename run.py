@@ -28,6 +28,14 @@ if __name__ == '__main__':
                 act_str = P2.think(CDC_Board)
                 res = P2.action(act_str,CDC_Board)
                 if res != False:
+                    if res==100: # move
+                        print('You have succesfully moved your piece.')
+                    elif res==200: # eat
+                        selup = CDC_Board.faceup[int(act_str[1])-1,int(act_str[2])-1]
+                        tarup = CDC_Board.faceup[int(act_str[3])-1,int(act_str[4])-1]
+                        print('You have succesfully captured a '+name_dic[CDC_Board.recent_dead[-1]]+' with your '+name_dic[tarup]+'!')
+                    else: # uncover
+                        print('You have succesfully uncovered a '+name_dic[res])
                     break
             CDC_Board.print_board()
             continue
@@ -40,6 +48,13 @@ if __name__ == '__main__':
                 act_str = P1.think(CDC_Board)
                 res = P1.action(act_str,CDC_Board)
                 if res != False:
+                    if res==100: # move
+                        print('You have succesfully moved your piece.')
+                    elif res==200: # eat
+                        tarup = CDC_Board.faceup[int(act_str[3])-1,int(act_str[4])-1]
+                        print('You have succesfully captured a '+name_dic[CDC_Board.recent_dead[-1]]+' with your '+name_dic[tarup]+'!')
+                    else: # uncover
+                        print('You have succesfully uncovered a '+name_dic[res])
                     break
             CDC_Board.print_board()
             continue
