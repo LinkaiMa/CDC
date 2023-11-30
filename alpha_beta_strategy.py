@@ -5,12 +5,12 @@ from helpers import apply_action, get_avaliable_actions, undo_action
 from heuristics import placeholder_heuristic
 
 def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
-    if depth == 0 or len(get_avaliable_actions(board, is_max_plr)) == 0 or board.check_status() != None:
+    if depth == 0 or len(get_avaliable_actions(board, not is_max_plr)) == 0 or board.check_status() != None:
         return utility_fn(board)
     
     if is_max_plr:
         max_eval = float('-inf')
-        for action in get_avaliable_actions(board, is_max_plr):
+        for action in get_avaliable_actions(board, not is_max_plr):
             eval = None
             if action[0] == MoveType.UNCOVER:
                 # No searching if we immediately uncover a pawn
@@ -36,7 +36,7 @@ def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
     
     else:
         min_eval = float('inf')
-        for action in get_avaliable_actions(board, is_max_plr):
+        for action in get_avaliable_actions(board, not is_max_plr):
             eval = None
             if action[0] == MoveType.UNCOVER:
                 # No searching if we immediately uncover a pawn
@@ -75,7 +75,7 @@ def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = 
     board_state = deepcopy(currBoard)
     alpha = float("-inf")
     beta = float("inf")
-    is_max_plr = True if currPlayer == -1 else False
+    is_max_plr = True if currPlayer == 1 else False
     
     params = {
         "board": board_state,
