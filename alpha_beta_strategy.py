@@ -28,10 +28,10 @@ def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
                 eval = _minmax(**params)
                 undo_action(board, action)
                 
-                max_eval = max(max_eval, eval)
-                alpha = max(alpha, eval)
-                if beta <= alpha:
-                    break
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta <= alpha:
+                break
         return max_eval
     
     else:
@@ -54,10 +54,10 @@ def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
                 eval = _minmax(**params)
                 undo_action(board, action)
                 
-                min_eval = min(min_eval, eval)
-                beta = min(beta, eval)
-                if beta <= alpha:
-                    break
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta <= alpha:
+                break
         return min_eval
 
 def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = placeholder_heuristic) -> Action:
