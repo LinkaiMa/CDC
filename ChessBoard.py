@@ -1,6 +1,6 @@
 import numpy as np
-import random
-
+import tabulate
+import pandas as pd 
 name_list = ['General','Chariot','Horse','Cannon','Advisor','Elephant','Soldier']
 name_dic = {}
 for i,z in zip(np.arange(7,0,-1), name_list):
@@ -25,21 +25,32 @@ class Board:
         self.facedown = all_chess.reshape((4,8))
         self.timer = 0
         self.recent_dead = []
-    def print_board(self):
-        n,m = self.faceup.shape
-        for row in range(n):
-            print('\n')
-            toprint=''
-            for col in range(m):
-                num = self.faceup[row,col]
-                if num == -9:
-                    toprint += '   '
-                elif num == 0:
-                    toprint += ' x'+' '
-                else:
-                    res = str(num) if num<0 else ' '+str(num)
-                    toprint += res +' '
-            print(toprint)
+
+    def print_board(self): 
+        B = self.faceup 
+        df = pd.DataFrame(B,index=['r'+str(i) for i in range(1,5)])
+        for i in range(4):
+            for j in range(8):
+                if B[i,j]==-9:
+                    df.iloc[i,j]=''
+                if B[i,j]==0:
+                    df.iloc[i,j]='?'
+        print(tabulate.tabulate(df, tablefmt='grid', showindex=True, headers = ['c'+str(i) for i in range(1,9)]))  
+    # def print_board(self):
+    #     n,m = self.faceup.shape
+    #     for row in range(n):
+    #         print('\n')
+    #         toprint=''
+    #         for col in range(m):
+    #             num = self.faceup[row,col]
+    #             if num == -9:
+    #                 toprint += '   '
+    #             elif num == 0:
+    #                 toprint += ' x'+' '
+    #             else:
+    #                 res = str(num) if num<0 else ' '+str(num)
+    #                 toprint += res +' '
+    #         print(toprint)
         
     def uncover(self,pos):
         # takes the position to uncover (starting from 1)
@@ -51,7 +62,7 @@ class Board:
             else:
                 self.faceup[i,j],self.facedown[i,j] = self.facedown[i,j],0
                 self.timer = 0
-                self.print_board()
+                # self.print_board()
                 return self.faceup[i,j]
         else:
             print('Error: Out of the boundary')
@@ -98,7 +109,7 @@ class Board:
             print('You have succesfully moved your piece.')
             self.faceup[sel[0]-1,sel[1]-1],self.faceup[tar[0]-1,tar[1]-1] = -9,selup
             self.timer += 1
-            self.print_board()
+            # self.print_board()
             return True
         if selup*tarup>0:
             print('You cannot capture your own piece!')
@@ -112,7 +123,7 @@ class Board:
                     self.redpieces.remove(tarup)
                 else: # a black piece is captured
                     self.blackpieces.remove(tarup)
-                self.print_board()
+                # self.print_board()
                 self.recent_dead.append(tarup)
                 return True
             else:
