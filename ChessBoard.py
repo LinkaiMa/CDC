@@ -144,7 +144,7 @@ class Board:
         if len(self.blackpieces)==0:
             print('Red wins!')
             return 1
-        if self.timer>=50:
+        if self.timer>=10:
             print('Tie!')
             return 0
         return None

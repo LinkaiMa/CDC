@@ -40,4 +40,4 @@ class AI(Player):
     def __init__(self):
         super().__init__()
     def think(self,B):
-        return action2cmd(find_best_action_by_ab(B, self.role, 2, utility_fn = placeholder_heuristic))
+        return action2cmd(find_best_action_by_ab(B, self.role, 10, utility_fn = placeholder_heuristic))
