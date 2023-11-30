@@ -72,7 +72,7 @@ class Board:
     def is_move_legal(self,sel,tar):
         good_pos = [(sel[0]+1,sel[1]),(sel[0],sel[1]+1),
                     (sel[0]-1,sel[1]),(sel[0],sel[1]-1)]
-        if (tar[0]<=4 and tar[1]<=8 and tar in good_pos):
+        if (tar[0]<=4 and tar[0]>=1 and tar[1]<=8 and tar[1]>=1 and tar in good_pos):
             return True
         else:
             return False
