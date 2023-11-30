@@ -24,6 +24,7 @@ class Board:
         
         self.facedown = all_chess.reshape((4,8))
         self.timer = 0
+        self.prev_timer = -1
         self.recent_dead = []
 
     def print_board(self): 
@@ -61,6 +62,7 @@ class Board:
                 return False
             else:
                 self.faceup[i,j],self.facedown[i,j] = self.facedown[i,j],0
+                self.prev_timer = self.timer
                 self.timer = 0
                 # self.print_board()
                 return self.faceup[i,j]
@@ -112,6 +114,7 @@ class Board:
         if tarup == -9:
             # print('You have succesfully moved your piece.')
             self.faceup[sel[0]-1,sel[1]-1],self.faceup[tar[0]-1,tar[1]-1] = -9,selup
+            self.prev_timer = self.timer
             self.timer += 1
             # self.print_board()
             return 100
@@ -122,6 +125,7 @@ class Board:
             if self.is_eat_legal(sel, tar):
                 # print('You have succesfully captured a '+name_dic[tarup]+' with your '+name_dic[selup]+'!')
                 self.faceup[sel[0]-1,sel[1]-1],self.faceup[tar[0]-1,tar[1]-1] = -9,selup
+                self.prev_timer = self.timer
                 self.timer = 0
                 if tarup>0: # a red piece is captured
                     self.redpieces.remove(tarup)

@@ -83,6 +83,8 @@ def undo_action(board: Board, action: Action) -> None:
             board.redpieces.append(faceup_state[dest_x][dest_y])
         else:
             board.blackpieces.append(faceup_state[dest_x][dest_y])
+        board.timer = board.prev_timer
+        board.prev_timer = -2
         # del board.recent_dead[-1]
         board.recent_dead.pop(-1)
         # myPawn_x = action[1]
