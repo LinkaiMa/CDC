@@ -16,6 +16,7 @@ if __name__ == '__main__':
         P1.role = 1; P2.role = -1 
     else:
         P1.role = -1; P2.role = 1 
+    CDC_Board.print_board()
         
     while CDC_Board.check_status() == None:
         if it%2==0: # P2's turn
@@ -28,6 +29,7 @@ if __name__ == '__main__':
                 res = P2.action(act_str,CDC_Board)
                 if res != False:
                     break
+            CDC_Board.print_board()
             continue
         else: # P1's turn
             print('P1 turn')
@@ -39,4 +41,5 @@ if __name__ == '__main__':
                 res = P1.action(act_str,CDC_Board)
                 if res != False:
                     break
+            CDC_Board.print_board()
             continue
