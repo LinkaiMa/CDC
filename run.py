@@ -1,7 +1,9 @@
 from ChessBoard import *
 from Players import *
+import numpy as np
 
 if __name__ == '__main__':
+    np.random.seed(0)
     # start game:    
     CDC_Board = Board()
     CDC_Board.print_board()
