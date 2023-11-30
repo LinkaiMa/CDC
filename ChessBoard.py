@@ -90,6 +90,10 @@ class Board:
             return False
         
     def move(self,sel,tar):
+        # if move successfully, return 100
+        # if eat successfully, return 200
+        # else return False
+
         if self.is_move_legal(sel, tar): pass
         else:
             print('You can only move to the immediate neighbor!')
@@ -106,17 +110,17 @@ class Board:
             print('You selected an empty position!')
             return False
         if tarup == -9:
-            print('You have succesfully moved your piece.')
+            # print('You have succesfully moved your piece.')
             self.faceup[sel[0]-1,sel[1]-1],self.faceup[tar[0]-1,tar[1]-1] = -9,selup
             self.timer += 1
             # self.print_board()
-            return True
+            return 100
         if selup*tarup>0:
             print('You cannot capture your own piece!')
             return False
         else:
             if self.is_eat_legal(sel, tar):
-                print('You have succesfully captured a '+name_dic[tarup]+' with your '+name_dic[selup]+'!')
+                # print('You have succesfully captured a '+name_dic[tarup]+' with your '+name_dic[selup]+'!')
                 self.faceup[sel[0]-1,sel[1]-1],self.faceup[tar[0]-1,tar[1]-1] = -9,selup
                 self.timer = 0
                 if tarup>0: # a red piece is captured
@@ -125,7 +129,7 @@ class Board:
                     self.blackpieces.remove(tarup)
                 # self.print_board()
                 self.recent_dead.append(tarup)
-                return True
+                return 200
             else:
                 print('You can not capture a piece of higher rank!')
                 return False
