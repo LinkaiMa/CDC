@@ -3,7 +3,7 @@ from typing import List
 from unittest import result
 from ChessBoard import Board
 from ObjTypes import Action, MoveType
-    
+
 def get_avaliable_actions(board: Board, is_black: bool) -> List[Action]:
     faceup_state = board.faceup
     result = []
@@ -16,41 +16,41 @@ def get_avaliable_actions(board: Board, is_black: bool) -> List[Action]:
                 continue
             elif is_black and faceup_state[i][j] < 0:
                 # eat
-                if i-1 >= 0 and faceup_state[i-1][j] > 0 and board.is_eat_legal((i+1,j+1),(i,j+1)):
+                if i-1 >= 0 and faceup_state[i-1][j] > 0 and faceup_state[i-1][j] < 8 and board.is_eat_legal((i+1,j+1),(i,j+1)):
                     result.append((MoveType.EAT,i+1,j+1,i,j+1))
-                elif i+1 < faceup_state.shape[0] and faceup_state[i+1][j] > 0 and board.is_eat_legal((i+1,j+1),(i+2,j+1)):
+                elif i+1 < faceup_state.shape[0] and faceup_state[i+1][j] > 0 and faceup_state[i+1][j] < 8 and board.is_eat_legal((i+1,j+1),(i+2,j+1)):
                     result.append((MoveType.EAT,i+1,j+1,i+2,j+1))
-                elif j-1 >= 0 and faceup_state[i][j-1] > 0 and board.is_eat_legal((i+1,j+1),(i+1,j)):
+                elif j-1 >= 0 and faceup_state[i][j-1] > 0 and faceup_state[i][j-1] < 8 and board.is_eat_legal((i+1,j+1),(i+1,j)):
                     result.append((MoveType.EAT,i+1,j+1,i+1,j))
-                elif j+1 < faceup_state.shape[1] and faceup_state[i][j+1] > 0 and board.is_eat_legal((i+1,j+1),(i+1,j+2)):
+                elif j+1 < faceup_state.shape[1] and faceup_state[i][j+1] > 0 and faceup_state[i][j+1] < 8 and board.is_eat_legal((i+1,j+1),(i+1,j+2)):
                     result.append((MoveType.EAT,i+1,j+1,i+1,j+2))
                 # move
-                if i-1 >= 0 and faceup_state[i-1][j] == 0 and board.is_move_legal((i+1,j+1),(i,j+1)):
+                if i-1 >= 0 and faceup_state[i-1][j] == -9 and board.is_move_legal((i+1,j+1),(i,j+1)):
                     result.append((MoveType.MOVE,i+1,j+1,i,j+1))
-                elif i+1 < faceup_state.shape[0] and faceup_state[i+1][j] == 0 and board.is_move_legal((i+1,j+1),(i+2,j+1)):
+                elif i+1 < faceup_state.shape[0] and faceup_state[i+1][j] == -9 and board.is_move_legal((i+1,j+1),(i+2,j+1)):
                     result.append((MoveType.MOVE,i+1,j+1,i+2,j+1))
-                elif j-1 >= 0 and faceup_state[i][j-1] == 0 and board.is_move_legal((i+1,j+1),(i+1,j)):
+                elif j-1 >= 0 and faceup_state[i][j-1] == -9 and board.is_move_legal((i+1,j+1),(i+1,j)):
                     result.append((MoveType.MOVE,i+1,j+1,i+1,j))
-                elif j+1 < faceup_state.shape[1] and faceup_state[i][j+1] == 0 and board.is_move_legal((i+1,j+1),(i+1,j+2)):
+                elif j+1 < faceup_state.shape[1] and faceup_state[i][j+1] == -9 and board.is_move_legal((i+1,j+1),(i+1,j+2)):
                     result.append((MoveType.MOVE,i+1,j+1,i+1,j+2))
             elif not is_black and faceup_state[i][j] > 0:
                 # eat
-                if i-1 >= 0 and faceup_state[i-1][j] < 0 and board.is_eat_legal((i+1,j+1),(i,j+1)):
+                if i-1 >= 0 and faceup_state[i-1][j] < 0 and faceup_state[i-1][j] > -8 and board.is_eat_legal((i+1,j+1),(i,j+1)):
                     result.append((MoveType.EAT,i+1,j+1,i,j+1))
-                elif i+1 < faceup_state.shape[0] and faceup_state[i+1][j]< 0 and board.is_eat_legal((i+1,j+1),(i+2,j+1)):
+                elif i+1 < faceup_state.shape[0] and faceup_state[i+1][j]< 0 and faceup_state[i+1][j] > -8 and board.is_eat_legal((i+1,j+1),(i+2,j+1)):
                     result.append((MoveType.EAT,i+1,j+1,i+2,j+1))
-                elif j-1 >= 0 and faceup_state[i][j-1] < 0 and board.is_eat_legal((i+1,j+1),(i+1,j)):
+                elif j-1 >= 0 and faceup_state[i][j-1] < 0 and faceup_state[i][j-1] > -8 and board.is_eat_legal((i+1,j+1),(i+1,j)):
                     result.append((MoveType.EAT,i+1,j+1,i+1,j))
-                elif j+1 < faceup_state.shape[1] and faceup_state[i][j+1] < 0 and board.is_eat_legal((i+1,j+1),(i+1,j+2)):
+                elif j+1 < faceup_state.shape[1] and faceup_state[i][j+1] < 0 and faceup_state[i][j+1] > -8 and board.is_eat_legal((i+1,j+1),(i+1,j+2)):
                     result.append((MoveType.EAT,i+1,j+1,i+1,j+2))
                 # move
-                if i-1 >= 0 and faceup_state[i-1][j] == 0 and board.is_move_legal((i+1,j+1),(i,j+1)):
+                if i-1 >= 0 and faceup_state[i-1][j] == -9 and board.is_move_legal((i+1,j+1),(i,j+1)):
                     result.append((MoveType.MOVE,i+1,j+1,i,j+1))
-                elif i+1 < faceup_state.shape[0] and faceup_state[i+1][j] == 0 and board.is_move_legal((i+1,j+1),(i+2,j+1)):
+                elif i+1 < faceup_state.shape[0] and faceup_state[i+1][j] == -9 and board.is_move_legal((i+1,j+1),(i+2,j+1)):
                     result.append((MoveType.MOVE,i+1,j+1,i+2,j+1))
-                elif j-1 >= 0 and faceup_state[i][j-1] == 0 and board.is_move_legal((i+1,j+1),(i+1,j)):
+                elif j-1 >= 0 and faceup_state[i][j-1] == -9 and board.is_move_legal((i+1,j+1),(i+1,j)):
                     result.append((MoveType.MOVE,i+1,j+1,i+1,j))
-                elif j+1 < faceup_state.shape[1] and faceup_state[i][j+1] == 0 and board.is_move_legal((i+1,j+1),(i+1,j+2)):
+                elif j+1 < faceup_state.shape[1] and faceup_state[i][j+1] == -9 and board.is_move_legal((i+1,j+1),(i+1,j+2)):
                     result.append((MoveType.MOVE,i+1,j+1,i+1,j+2))
     return result
 
