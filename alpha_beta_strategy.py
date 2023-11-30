@@ -88,7 +88,7 @@ def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = 
     
     best_action = None
     best_score = None
-    for action in get_avaliable_actions(board_state, is_max_plr):
+    for action in get_avaliable_actions(board_state, not is_max_plr):
         score = None
         if action[0] == MoveType.UNCOVER:
             # No searching if we immediately uncover a pawn
