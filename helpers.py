@@ -70,11 +70,11 @@ def undo_action(board: Board, action: Action) -> None:
     if action[0] == MoveType.UNCOVER:
         raise Exception("An uncover action cannot be undone.")
     elif action[0] == MoveType.EAT:
-        myPawn_x = action[1]
-        myPawn_y = action[2]
+        myPawn_x = action[1]-1
+        myPawn_y = action[2]-1
         
-        dest_x = action[3]
-        dest_y = action[4]
+        dest_x = action[3]-1
+        dest_y = action[4]-1
 
         faceup_state[myPawn_x][myPawn_y],faceup_state[dest_x][dest_y] = \
         faceup_state[dest_x][dest_y],board.recent_dead[-1]
@@ -92,11 +92,11 @@ def undo_action(board: Board, action: Action) -> None:
         # #TODO: undo eat
         # pass
     elif action[0] == MoveType.MOVE:
-        myPawn_x = action[1]
-        myPawn_y = action[2]
+        myPawn_x = action[1]-1
+        myPawn_y = action[2]-1
         
-        dest_x = action[3]
-        dest_y = action[4]
+        dest_x = action[3]-1
+        dest_y = action[4]-1
 
         faceup_state[myPawn_x][myPawn_y],faceup_state[dest_x][dest_y] = \
         faceup_state[dest_x][dest_y],faceup_state[myPawn_x][myPawn_y]
