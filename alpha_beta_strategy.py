@@ -24,10 +24,11 @@ def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
                     "beta": beta,
                     "utility_fn": utility_fn,
                 }
+                old_timer = board.timer
                 apply_action(board, action)
                 eval = _minmax(**params)
                 undo_action(board, action)
-                
+                board.timer = old_timer
             max_eval = max(max_eval, eval)
             alpha = max(alpha, eval)
             if beta <= alpha:
@@ -50,10 +51,12 @@ def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
                     "beta": beta,
                     "utility_fn": utility_fn,
                 }
+                old_timer = board.timer
                 apply_action(board, action)
                 eval = _minmax(**params)
                 undo_action(board, action)
-                
+                board.timer = old_timer
+
             min_eval = min(min_eval, eval)
             beta = min(beta, eval)
             if beta <= alpha:
@@ -94,10 +97,11 @@ def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = 
             # No searching if we immediately uncover a pawn
             score = utility_fn(board_state)
         else:
+            old_timer = board_state.timer
             apply_action(board_state, action)
             score = _minmax(**params)
             undo_action(board_state, action)
-            
+            board_state.timer = old_timer
         # print(f"Action: {action}, score: {score}")
         
         if is_max_plr and (best_score is None or score > best_score):

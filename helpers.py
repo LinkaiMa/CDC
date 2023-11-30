@@ -68,8 +68,8 @@ def apply_action(board: Board, action: Action) -> None:
 def undo_action(board: Board, action: Action) -> None:
     faceup_state = board.faceup
     if action[0] == MoveType.UNCOVER:
-        board.timer = board.prev_timer
-        board.prev_timer = -3
+        # board.timer = board.prev_timer
+        # board.prev_timer = -3
         raise Exception("An uncover action cannot be undone.")
     elif action[0] == MoveType.EAT:
         myPawn_x = action[1]-1
@@ -85,8 +85,8 @@ def undo_action(board: Board, action: Action) -> None:
             board.redpieces.append(faceup_state[dest_x][dest_y])
         else:
             board.blackpieces.append(faceup_state[dest_x][dest_y])
-        board.timer = board.prev_timer
-        board.prev_timer = -2
+        # board.timer = board.prev_timer
+        # board.prev_timer = -2
         # del board.recent_dead[-1]
         board.recent_dead.pop(-1)
         # myPawn_x = action[1]
