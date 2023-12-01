@@ -24,6 +24,7 @@ def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
                     "beta": beta,
                     "utility_fn": utility_fn,
                 }
+                print(f"Red Turn: applying action {action}")
                 apply_action(board, action)
                 eval = _minmax(**params)
                 undo_action(board, action)
@@ -50,6 +51,7 @@ def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
                     "beta": beta,
                     "utility_fn": utility_fn,
                 }
+                print(f"Black Turn: action {action}")
                 apply_action(board, action)
                 eval = _minmax(**params)
                 undo_action(board, action)
@@ -79,7 +81,7 @@ def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = 
     
     params = {
         "board": board_state,
-        "is_max_plr": is_max_plr,
+        "is_max_plr": not is_max_plr,
         "depth": depth,
         "alpha": alpha,
         "beta": beta,
@@ -90,6 +92,7 @@ def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = 
     best_score = None
     for action in get_avaliable_actions(board_state, not is_max_plr):
         score = None
+        print(f"Start probing {action}")
         if action[0] == MoveType.UNCOVER:
             # No searching if we immediately uncover a pawn
             score = utility_fn(board_state)
@@ -106,6 +109,8 @@ def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = 
         elif not is_max_plr and (best_score is None or score < best_score):
             best_action = action
             best_score = score
+            
+        input(f"finished probing on action {action} with score {score}, press enter to continue.")
     print(f"Best action: {best_action}, score: {best_score}")
     return best_action
         

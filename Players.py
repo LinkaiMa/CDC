@@ -1,6 +1,5 @@
 from alpha_beta_strategy import find_best_action_by_ab
 from helpers import action2cmd
-from heuristics import placeholder_heuristic
 
 
 class Player:
