@@ -1,13 +1,14 @@
 from ChessBoard import *
 from Players import *
 import numpy as np
+from heuristics import placeholder_heuristic, naive_heuristic
 
 if __name__ == '__main__':
-    np.random.seed(0)
+    np.random.seed(2)
     # start game:    
     CDC_Board = Board()
     CDC_Board.print_board()
-    P1 = Human(); P2 = AI()
+    P1 = AI(naive_heuristic); P2 = AI(naive_heuristic)
     it = 0
 
     # we let Player1 make the first move

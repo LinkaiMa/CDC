@@ -1,6 +1,5 @@
 from alpha_beta_strategy import find_best_action_by_ab
 from helpers import action2cmd
-from heuristics import placeholder_heuristic
 
 
 class Player:
@@ -37,7 +36,8 @@ class Human(Player):
         act_str = input("How should I move?")
         return act_str
 class AI(Player):
-    def __init__(self):
+    def __init__(self, heuristic):
         super().__init__()
+        self.heuristic = heuristic
     def think(self,B):
-        return action2cmd(find_best_action_by_ab(B, self.role, 2, utility_fn = placeholder_heuristic))
+        return action2cmd(find_best_action_by_ab(B, self.role, 15, self.heuristic))

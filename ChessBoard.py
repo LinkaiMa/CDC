@@ -1,6 +1,7 @@
 import numpy as np
 import tabulate
 import pandas as pd 
+
 name_list = ['General','Chariot','Horse','Cannon','Advisor','Elephant','Soldier']
 name_dic = {}
 for i,z in zip(np.arange(7,0,-1), name_list):
