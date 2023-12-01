@@ -2,7 +2,7 @@ from copy import deepcopy
 from ChessBoard import Board
 from ObjTypes import Action, MoveType
 from helpers import apply_action, get_avaliable_actions, undo_action
-from heuristics import placeholder_heuristic
+from heuristics import placeholder_heuristic, naive_heuristic
 
 def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
     if depth == 0 or len(get_avaliable_actions(board, not is_max_plr)) == 0 or board.check_status() != None:
