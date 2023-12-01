@@ -5,16 +5,17 @@ from helpers import apply_action, get_avaliable_actions, undo_action
 from heuristics import placeholder_heuristic, naive_heuristic
 
 def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
-    if depth == 0 or len(get_avaliable_actions(board, not is_max_plr)) == 0 or board.check_status() != None:
-        return utility_fn(board)
+    if depth == 0 or len(get_avaliable_actions(board, not is_max_plr)) == 0 or board.check_status(vbose=False) != None:
+        return utility_fn(board, [None])
     
     if is_max_plr:
         max_eval = float('-inf')
+        max_action = None
         for action in get_avaliable_actions(board, not is_max_plr):
             eval = None
             if action[0] == MoveType.UNCOVER:
                 # No searching if we immediately uncover a pawn
-                eval = utility_fn(board)
+                eval = utility_fn(board, action)
             else:
                 params = {
                     "board": board,
@@ -24,24 +25,30 @@ def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
                     "beta": beta,
                     "utility_fn": utility_fn,
                 }
-                print(f"Red Turn: applying action {action}")
+                # print(f"Red Turn: applying action {action}")
+                old_timer = board.timer
                 apply_action(board, action)
                 eval = _minmax(**params)
                 undo_action(board, action)
+                board.timer = old_timer
                 
+            if eval > max_eval:
+                max_action = action
             max_eval = max(max_eval, eval)
             alpha = max(alpha, eval)
             if beta <= alpha:
                 break
+        # print(f"Max action: {max_action}, score: {max_eval}")
         return max_eval
     
     else:
         min_eval = float('inf')
+        min_action = None
         for action in get_avaliable_actions(board, not is_max_plr):
             eval = None
             if action[0] == MoveType.UNCOVER:
                 # No searching if we immediately uncover a pawn
-                eval = utility_fn(board)
+                eval = utility_fn(board, action)
             else:
                 params = {
                     "board": board,
@@ -51,15 +58,20 @@ def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
                     "beta": beta,
                     "utility_fn": utility_fn,
                 }
-                print(f"Black Turn: action {action}")
+                # print(f"Black Turn: action {action}")
+                old_timer = board.timer
                 apply_action(board, action)
                 eval = _minmax(**params)
                 undo_action(board, action)
-                
+                board.timer = old_timer
+            
+            if eval < min_eval:
+                min_action = action
             min_eval = min(min_eval, eval)
             beta = min(beta, eval)
             if beta <= alpha:
                 break
+        # print(f"Min action: {min_action}, score: {min_eval}")
         return min_eval
 
 def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = placeholder_heuristic) -> Action:
@@ -90,16 +102,19 @@ def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = 
     
     best_action = None
     best_score = None
+    # print(f"Avaliable actions: {get_avaliable_actions(board_state, not is_max_plr)}")
     for action in get_avaliable_actions(board_state, not is_max_plr):
         score = None
-        print(f"Start probing {action}")
+        # print(f"Start probing {action}")
         if action[0] == MoveType.UNCOVER:
             # No searching if we immediately uncover a pawn
-            score = utility_fn(board_state)
+            score = utility_fn(board_state, action)
         else:
+            old_timer = board_state.timer
             apply_action(board_state, action)
             score = _minmax(**params)
             undo_action(board_state, action)
+            board_state.timer = old_timer
             
         # print(f"Action: {action}, score: {score}")
         
@@ -110,7 +125,7 @@ def find_best_action_by_ab(currBoard: Board, currPlayer, depth=-1, utility_fn = 
             best_action = action
             best_score = score
             
-        input(f"finished probing on action {action} with score {score}, press enter to continue.")
+        # input(f"finished probing on action {action} with score {score}, press enter to continue.")
     print(f"Best action: {best_action}, score: {best_score}")
     return best_action
         

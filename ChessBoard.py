@@ -37,6 +37,17 @@ class Board:
                     df.iloc[i,j]=''
                 if B[i,j]==0:
                     df.iloc[i,j]='?'
+        print(tabulate.tabulate(df, tablefmt='grid', showindex=True, headers = ['c'+str(i) for i in range(1,9)]))
+        
+    def print_board_facedown(self): 
+        B = self.facedown 
+        df = pd.DataFrame(B,index=['r'+str(i) for i in range(1,5)])
+        for i in range(4):
+            for j in range(8):
+                if B[i,j]==-9:
+                    df.iloc[i,j]=''
+                if B[i,j]==0:
+                    df.iloc[i,j]='?'
         print(tabulate.tabulate(df, tablefmt='grid', showindex=True, headers = ['c'+str(i) for i in range(1,9)]))  
     # def print_board(self):
     #     n,m = self.faceup.shape
@@ -138,15 +149,18 @@ class Board:
             else:
                 print('You can not capture a piece of higher rank!')
                 return False
-    def check_status(self):
+    def check_status(self, vbose=True):
         if len(self.redpieces)==0:
-            print('Black wins!')
+            if vbose:
+                print('Black wins!')
             return -1
         if len(self.blackpieces)==0:
-            print('Red wins!')
+            if vbose:
+                print('Red wins!')
             return 1
-        if self.timer>=50:
-            print('Tie!')
+        if self.timer>=20:
+            if vbose:
+                print('Tie!')
             return 0
         return None
     

@@ -1,14 +1,19 @@
+import sys
 from ChessBoard import *
 from Players import *
 import numpy as np
-from heuristics import placeholder_heuristic, naive_heuristic
+from heuristics import naive_heuristic_2, placeholder_heuristic, naive_heuristic
 
 if __name__ == '__main__':
-    np.random.seed(2)
+    ori_stdout = sys.stdout
+    f = open('log2.txt', 'w')
+    sys.stdout = f
+    np.random.seed(10)
     # start game:    
     CDC_Board = Board()
-    CDC_Board.print_board()
-    P1 = AI(naive_heuristic); P2 = AI(naive_heuristic)
+    # CDC_Board.print_board_facedown()
+    # CDC_Board.faceup = CDC_Board.facedown
+    P1 = AI(naive_heuristic); P2 = AI(naive_heuristic_2)
     it = 0
 
     # we let Player1 make the first move
@@ -22,6 +27,7 @@ if __name__ == '__main__':
     CDC_Board.print_board()
         
     while CDC_Board.check_status() == None:
+        
         if it%2==0: # P2's turn
             print('P2 turn')
             it+=1
@@ -61,3 +67,7 @@ if __name__ == '__main__':
                     break
             CDC_Board.print_board()
             continue
+        
+    sys.stdout = ori_stdout
+    f.flush()
+    f.close()
