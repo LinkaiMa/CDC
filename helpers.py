@@ -6,7 +6,7 @@ from ChessBoard import Board
 from ObjTypes import Action, MoveType
 
 import random
-random.seed(10)
+random.seed(456)
 
 def get_avaliable_actions(board: Board, is_black: bool) -> List[Action]:
     faceup_state = board.faceup

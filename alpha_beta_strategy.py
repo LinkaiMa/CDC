@@ -48,7 +48,8 @@ def _minmax(board: Board, is_max_plr, depth, alpha, beta, utility_fn) -> float:
             eval = None
             if action[0] == MoveType.UNCOVER:
                 # No searching if we immediately uncover a pawn
-                eval = utility_fn(board, action)
+                # eval = utility_fn(board, action)
+                eval = 0
             else:
                 params = {
                     "board": board,

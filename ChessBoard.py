@@ -28,7 +28,9 @@ class Board:
         self.prev_timer = -1
         self.recent_dead = []
 
-    def print_board(self): 
+    def print_board(self, not_really=False): 
+        if not_really:
+            return
         B = self.faceup 
         df = pd.DataFrame(B,index=['r'+str(i) for i in range(1,5)])
         for i in range(4):
@@ -37,7 +39,9 @@ class Board:
                     df.iloc[i,j]=''
                 if B[i,j]==0:
                     df.iloc[i,j]='?'
-        print(tabulate.tabulate(df, tablefmt='grid', showindex=True, headers = ['c'+str(i) for i in range(1,9)]))
+        tb = tabulate.tabulate(df, tablefmt='grid', showindex=True, headers = ['c'+str(i) for i in range(1,9)])
+        print(tb)
+        return tb
         
     def print_board_facedown(self): 
         B = self.facedown 

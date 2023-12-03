@@ -1,50 +1,62 @@
-from calendar import c
-from re import X
 from typing import Tuple
 from ChessBoard import Board
 from ObjTypes import Action, MoveType
 import numpy as np
 
+FACTOR = 1000
+
 def placeholder_heuristic(state: Board, action) -> float:
     return 0
 
-def baseline_1(state:Board, action) -> float:
-    if state.check_status(vbose=False) == 1:
-        return 52
+def baseline_0(state: Board, action) -> float:
+    if action[0] == MoveType.UNCOVER:
+        return 0
+    elif state.check_status(vbose=False) == 1:
+        return 52 * FACTOR
     elif state.check_status(vbose=False) == -1:
-        return -52
+        return -52 * FACTOR
+    else:
+        return 0
+
+def baseline_1(state:Board, action) -> float:
+    if action[0] == MoveType.UNCOVER:
+        return 0
+    elif state.check_status(vbose=False) == 1:
+        return 52 * FACTOR
+    elif state.check_status(vbose=False) == -1:
+        return -52 * FACTOR
     elif state.check_status(vbose=False) == 0:
         return 0
     else:
         return np.sum( np.multiply(state.faceup, state.faceup!= -9).flatten() )
 
-def baseline_2(state: Board, action) -> float:
+def baseline_2(state: Board, action, unique_uncover=False) -> float:
     if state.check_status(vbose=False) == 1:
-        return 52
+        return 52 * FACTOR
     elif state.check_status(vbose=False) == -1:
-        return -52
+        return -52 * FACTOR
     # elif state.check_status(vbose=False) == 0 or (state.timer >= 6 and np.sum((state.faceup == 0).flatten()) > 0):
     elif state.check_status(vbose=False) == 0:
         return 0
         
-    # if action[0] == MoveType.UNCOVER:
-    #     vsum = 0.0
-    #     count = 0
-    #     for i in range(4):
-    #         for j in range(8):
-    #             if state.faceup[i][j] == 0:
-    #                 vsum += state.facedown[i][j]
-    #                 count += 1
-    #     B = state.faceup
-    #     score = 0
-    #     for i in range(4):
-    #         for j in range(8):
-    #             if B[i][j] != -9:
-    #                 if B[i][j] == 1 or B[i][j] == -1:
-    #                     score += B[i][j] * 6.5
-    #                 else:
-    #                     score += B[i][j]
-    #     return vsum / count + score
+    if action[0] == MoveType.UNCOVER:
+        vsum = 0.0
+        count = 0
+        for i in range(4):
+            for j in range(8):
+                if state.faceup[i][j] == 0:
+                    vsum += state.facedown[i][j]
+                    count += 1
+        B = state.faceup
+        score = 0
+        for i in range(4):
+            for j in range(8):
+                if B[i][j] != -9:
+                    if B[i][j] == 1 or B[i][j] == -1:
+                        score += B[i][j] * 6.5
+                    else:
+                        score += B[i][j]
+        return vsum / count + score
     
     else:                    
         B = state.faceup
@@ -88,6 +100,8 @@ def eatable_neighbour(state: Board, coord: Tuple[int, int], k=3) -> float:
     return score
 
 def baseline_3(state: Board, action: Action) -> float:
+    if action[0] == MoveType.UNCOVER:
+        return 0
     result = 0
     result += 10 * baseline_2(state, action)
     for i in range(state.faceup.shape[0]):
