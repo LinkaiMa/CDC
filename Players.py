@@ -34,10 +34,11 @@ class Human(Player):
         super().__init__()
     def think(self,B):
         act_str = input("How should I move?")
-        return act_str
+        return act_str, None
 class AI(Player):
     def __init__(self, heuristic):
         super().__init__()
         self.heuristic = heuristic
     def think(self,B):
-        return action2cmd(find_best_action_by_ab(B, self.role, 5, self.heuristic))
+        action = find_best_action_by_ab(B, self.role, 3, self.heuristic)
+        return action2cmd(action), action
