@@ -1,14 +1,10 @@
 from copy import deepcopy
 from random import random
-import re
-import sys
-from tkinter import N
 
-from matplotlib.pylab import rand
 from ChessBoard import *
 from Players import *
 import numpy as np
-from heuristics import baseline_0, baseline_1, baseline_3
+from heuristics import baseline_0, baseline_1, baseline_2, baseline_3
 
 N_RUNS = 25
 PRINT = False
@@ -49,7 +45,7 @@ if __name__ == '__main__':
         CDC_Board = Board()
         # CDC_Board.print_board(not PRINT)_facedown()
         # CDC_Board.faceup = CDC_Board.facedown
-        P1 = AI(baseline_3); P2 = AI(baseline_0)
+        P2 = AI(baseline_2); P1 = AI(baseline_1)
         it = 0
 
         # we let Player1 make the first move

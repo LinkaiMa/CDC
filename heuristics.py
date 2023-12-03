@@ -72,7 +72,7 @@ def baseline_2(state: Board, action, unique_uncover=False) -> float:
         return score
     
     
-def eatable_neighbour(state: Board, coord: Tuple[int, int], k=3) -> float:
+def eatable_neighbour(state: Board, coord: Tuple[int, int], k=2) -> float:
     # check up, down, left, right
     x, y = coord
     B = state.faceup
@@ -100,8 +100,8 @@ def eatable_neighbour(state: Board, coord: Tuple[int, int], k=3) -> float:
     return score
 
 def baseline_3(state: Board, action: Action) -> float:
-    if action[0] == MoveType.UNCOVER:
-        return 0
+    # if action[0] == MoveType.UNCOVER:
+    #     return 0
     result = 0
     result += 10 * baseline_2(state, action)
     for i in range(state.faceup.shape[0]):
