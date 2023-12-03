@@ -1,9 +1,12 @@
 
-from random import shuffle   
+from random import shuffle
 from typing import List
 from unittest import result
 from ChessBoard import Board
 from ObjTypes import Action, MoveType
+
+import random
+random.seed(10)
 
 def get_avaliable_actions(board: Board, is_black: bool) -> List[Action]:
     faceup_state = board.faceup
